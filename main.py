@@ -1,3 +1,16 @@
+import tkinter as tk
+import asyncio
+
+
+def run_tkinter():
+    root = tk.Tk()
+    root.geometry("800x600")
+    root.title("Tkinter GUI")
+    label = tk.Label(root, text="Hello")
+    label.pack()
+    root.mainloop()
+
+
 from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
@@ -23,5 +36,11 @@ def postHoge():
     return make_response(jsonify(response))
 
 
-if __name__ == "__main__":
+async def run_flask():
+    await asyncio.sleep(1)
     app.run(host="127.0.0.1", port=5000)
+
+
+if __name__ == "__main__":
+    run_tkinter()
+    asyncio.run(run_flask())
