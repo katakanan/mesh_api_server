@@ -1,8 +1,9 @@
 # from quart_trio import QuartTrio
 from quart import render_template, Quart, request
-import trio
-import asyncio
-import datetime
+# import trio
+# import asyncio
+# import signal
+# import datetime
 from meshlib import MESH, MESH_TYPE, MESH_MSG
 
 le_block = MESH(MESH_TYPE.MESH_100LE)
@@ -36,5 +37,10 @@ async def find_mesh_block():
     app.add_background_task(le_block.main)
     return "finding mesh block"
 
+@app.route("/exit", methods=["GET"])
+async def exit_mesh():
+    app.add_background_task(le_block.push_msg, MESH_MSG.EXIT)
+    return 'Disconnecting Mesh'
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

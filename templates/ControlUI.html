@@ -35,6 +35,23 @@ async function blink_led(color = "R"){
       console.error('エラー:', error);
   }
 }
+
+async function exit_mesh(){
+  var url = 'http://localhost:5000/exit';
+
+  try {
+      const response = await fetch(url);
+
+      if (response.ok) {
+          const data = await response.text();
+          console.log(data);
+      } else {
+          throw new Error('リクエストに失敗しました。');
+      }
+  } catch (error) {
+      console.error('エラー:', error);
+  }
+}
 </script>
 
 Hello World !!
@@ -42,3 +59,4 @@ Hello World !!
 <button class="btn btn-primary" onclick="blink_led('R')">Blink R</button>
 <button class="btn btn-primary" onclick="blink_led('G')">Blink G</button>
 <button class="btn btn-primary" onclick="blink_led('B')">Blink B</button>
+<button class="btn btn-primary" onclick="exit_mesh()">Exit Mesh</button>
