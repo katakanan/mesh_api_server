@@ -1,32 +1,40 @@
-from quart_trio import QuartTrio
-from quart import render_template
+# from quart_trio import QuartTrio
+from quart import render_template, Quart, request
 import trio
+import asyncio
 import datetime
+from meshlib import MESH, MESH_TYPE, MESH_MSG
 
-app = QuartTrio(__name__)
+le_block = MESH(MESH_TYPE.MESH_100LE)
 
-@app.before_serving
-async def startup():
-    app.nursery.start_soon(background_task)
+app = Quart(__name__)
 
 @app.get('/')
 async def index():
     return await render_template("ControlUI.html")
 
-@app.route("/hoge")
-async def hello():
-    app.nursery.start_soon(heavy_task)
-    print(f"heavy task start at {datetime.datetime.now()}")
-    return 'world'
+@app.route("/send_cmd", methods=["GET"])
+async def send_cmd():
+    params = request.args
+    response = {}
+    color_msg = MESH_MSG.LE_R
+    if "color" in params:
+        # print(params)
+        match params.get("color"):
+            case "R":
+                color_msg = MESH_MSG.LE_R
+            case "G":
+                color_msg = MESH_MSG.LE_G
+            case "B":
+                color_msg = MESH_MSG.LE_B
 
-async def background_task():
-    while True:
-        print('background_task working!!!!!')
-        await trio.sleep(2)
+    app.add_background_task(le_block.push_msg, color_msg)
+    return 'Sending MSG'
 
-async def heavy_task():
-    await trio.sleep(20)
-    print(f"heavy task finished at {datetime.datetime.now()}")
+@app.route("/find")
+async def find_mesh_block():
+    app.add_background_task(le_block.main)
+    return "finding mesh block"
 
 if __name__ == "__main__":
     app.run()
