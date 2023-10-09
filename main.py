@@ -31,7 +31,7 @@ def getHoge():
 def postHoge():
     params = request.json
     response = {}
-    if "param" in paras:
+    if "param" in params:
         response.setdefault("res", "param is :" + params.get("param"))
     return make_response(jsonify(response))
 
