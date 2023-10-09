@@ -1,0 +1,22 @@
+<script type="text/javascript">
+async function test(){
+  console.log("hello")
+  var url = 'http://localhost:5000/hoge';
+
+  try {
+      const response = await fetch(url);
+
+      if (response.ok) {
+          const data = await response.text();
+          console.log(data);
+      } else {
+          throw new Error('リクエストに失敗しました。');
+      }
+  } catch (error) {
+      console.error('エラー:', error);
+  }
+}
+</script>
+
+Hello World !!
+<button onclick="test()">Send</button>
