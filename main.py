@@ -1,46 +1,32 @@
-import tkinter as tk
-import asyncio
+from quart_trio import QuartTrio
+from quart import render_template
+import trio
+import datetime
 
+app = QuartTrio(__name__)
 
-def run_tkinter():
-    root = tk.Tk()
-    root.geometry("800x600")
-    root.title("Tkinter GUI")
-    label = tk.Label(root, text="Hello")
-    label.pack()
-    root.mainloop()
+@app.before_serving
+async def startup():
+    app.nursery.start_soon(background_task)
 
+@app.get('/')
+async def index():
+    return await render_template("ControlUI.html")
 
-from flask import Flask, request, jsonify, make_response
+@app.route("/hoge")
+async def hello():
+    app.nursery.start_soon(heavy_task)
+    print(f"heavy task start at {datetime.datetime.now()}")
+    return 'world'
 
-app = Flask(__name__)
+async def background_task():
+    while True:
+        print('background_task working!!!!!')
+        await trio.sleep(2)
 
-
-@app.route("/hoge", methods=["GET"])
-def getHoge():
-    params = request.args
-    response = {}
-    if "param" in params:
-        # print(params)
-        response.setdefault("res", "param is:" + params.get("param"))
-        # response.setdefault("res", "param is :", params.get("param"))
-    return make_response(jsonify(response))
-
-
-@app.route("/hoge", methods=["POST"])
-def postHoge():
-    params = request.json
-    response = {}
-    if "param" in params:
-        response.setdefault("res", "param is :" + params.get("param"))
-    return make_response(jsonify(response))
-
-
-async def run_flask():
-    await asyncio.sleep(1)
-    app.run(host="127.0.0.1", port=5000)
-
+async def heavy_task():
+    await trio.sleep(20)
+    print(f"heavy task finished at {datetime.datetime.now()}")
 
 if __name__ == "__main__":
-    run_tkinter()
-    asyncio.run(run_flask())
+    app.run()
