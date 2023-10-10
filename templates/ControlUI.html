@@ -1,0 +1,62 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script type="text/javascript">
+async function find_mesh_block(){
+  console.log("hello")
+  var url = 'http://localhost:5000/find';
+
+  try {
+      const response = await fetch(url);
+
+      if (response.ok) {
+          const data = await response.text();
+          console.log(data);
+      } else {
+          throw new Error('リクエストに失敗しました。');
+      }
+  } catch (error) {
+      console.error('エラー:', error);
+  }
+}
+
+async function blink_led(color = "R"){
+  var url = 'http://localhost:5000/send_cmd?color=' + color;
+
+  try {
+      const response = await fetch(url);
+
+      if (response.ok) {
+          const data = await response.text();
+          console.log(data);
+      } else {
+          throw new Error('リクエストに失敗しました。');
+      }
+  } catch (error) {
+      console.error('エラー:', error);
+  }
+}
+
+async function exit_mesh(){
+  var url = 'http://localhost:5000/exit';
+
+  try {
+      const response = await fetch(url);
+
+      if (response.ok) {
+          const data = await response.text();
+          console.log(data);
+      } else {
+          throw new Error('リクエストに失敗しました。');
+      }
+  } catch (error) {
+      console.error('エラー:', error);
+  }
+}
+</script>
+
+Hello World !!
+<button class="btn btn-primary" onclick="find_mesh_block()">Find Mesh Block</button>
+<button class="btn btn-primary" onclick="blink_led('R')">Blink R</button>
+<button class="btn btn-primary" onclick="blink_led('G')">Blink G</button>
+<button class="btn btn-primary" onclick="blink_led('B')">Blink B</button>
+<button class="btn btn-primary" onclick="exit_mesh()">Exit Mesh</button>
