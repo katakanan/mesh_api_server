@@ -1,4 +1,5 @@
 # from quart_trio import QuartTrio
+import signal
 from quart import render_template, Quart, request
 # import trio
 import asyncio
@@ -35,8 +36,11 @@ async def send_cmd():
 
 @app.route("/find")
 async def find_mesh_block():
+    loop = asyncio.new_event_loop()
+
     app.add_background_task(le_block.main)
     app.add_background_task(bu_block.main)
+    # app.add_background_task(loop.run_until_complete, le_block.main())
     return "finding mesh block"
 
 @app.route("/exit", methods=["GET"])
@@ -48,10 +52,13 @@ async def exit_mesh():
 if __name__ == "__main__":
     # app.run(debug=True)
     loop = asyncio.get_event_loop()
+
     try:
         loop.run_until_complete(app.run_task(debug=True))
     except KeyboardInterrupt:
         pass
     finally:
+        # app.add_background_task(le_block.push_msg, MESH_MSG.EXIT)
+        # app.add_background_task(bu_block.push_msg, MESH_MSG.EXIT)
         loop.run_until_complete(app.shutdown())
-        loop.run_until_complete(app.cleanup())
+        
