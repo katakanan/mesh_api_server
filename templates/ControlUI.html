@@ -60,7 +60,6 @@
         }
     }
 
-
     const connection = new WebSocket('ws://localhost:5000/ws')
 
     connection.onopen = function (event) {
@@ -72,8 +71,9 @@
     };
 
     connection.onmessage = function (event) {
-        console.log(`Receive Msg : ${event}`)
+        console.log(event.data)
     };
+
 
     connection.onclose = function () {
         console.log("Disconnect")

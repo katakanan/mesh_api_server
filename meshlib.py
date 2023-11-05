@@ -32,7 +32,7 @@ class MESH_TYPE(Enum):
     MESH_100AC = "MESH-100AC"
 
 class MESH_EVENT_MSG:
-    BU_PUSH = 0
+    BU_PUSH = "BU_PUSH"
 
 class MESH_EVENT:
     def __init__(self):
