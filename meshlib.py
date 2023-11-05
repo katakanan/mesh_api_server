@@ -2,6 +2,7 @@ from enum import Enum
 import asyncio
 from bleak import BleakClient, discover
 from struct import pack
+import queue
 
 # UUID
 CORE_INDICATE_UUID = "72c90005-57a9-4d40-b746-534e22ec9f9e"
@@ -30,11 +31,14 @@ class MESH_TYPE(Enum):
     MESH_100GP = "MESH-100GP"
     MESH_100AC = "MESH-100AC"
 
+class MESH_EVENT_MSG:
+    BU_PUSH = "BU_PUSH"
 
 class MESH_EVENT:
     def __init__(self):
         self.name = ""
         self.event_counter = 0
+        self.event_queue = queue.LifoQueue(maxsize=0)
 
     def on_receive_indicate(self, sender, data: bytearray):
         data = bytes(data)
